@@ -1,0 +1,15 @@
+{
+  "title": "The Anagoge",
+  "description": "Essays, research, and working notes on knowledge, technology, and the systems we live within.",
+  "url": "https://example.com",
+  "author": "Independent writer",
+  "initials": "A",
+  "tagline": "An independent journal",
+  "headline": "Ideas, examined.",
+  "intro": "A place for considered writing. Essays, research, and observations on knowledge, technology, and the systems we live within.",
+  "bio": "I write to understand things more clearly. This journal brings together longer essays, research papers, and shorter notes: a record of questions pursued, arguments tested, and ideas still taking shape.",
+  "interests": ["Knowledge & inquiry", "Technology & society", "Institutions & systems"],
+  "email": "",
+  "links": [],
+  "showSampleNotice": true
+}

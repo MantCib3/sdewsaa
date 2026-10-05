@@ -1,0 +1,15 @@
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  X-Frame-Options: DENY
+  Permissions-Policy: camera=(), microphone=(), geolocation=()
+  Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' https: data:; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self'
+
+/feed.xml
+  Content-Type: application/rss+xml; charset=utf-8
+
+/content.mjs
+  Content-Type: text/javascript; charset=utf-8
+
+/writing/*/citation.bib
+  Content-Type: application/x-bibtex; charset=utf-8
