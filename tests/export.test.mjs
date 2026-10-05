@@ -41,15 +41,42 @@ test("every published article has content and canonical metadata", () => {
   }
 });
 
-test("homepage journal introduction follows the writing and precedes the footer", () => {
+test("homepage keeps writing and navigation without the redundant introductory blocks", () => {
   const html = read("index.html");
-  const grid = html.indexOf('class="home-grid"');
-  const recent = html.indexOf('id="latest-heading"');
-  const intro = html.indexOf('class="hero"');
-  const footer = html.indexOf('class="site-footer"');
-  assert.ok(grid >= 0 && recent > grid && intro > recent && footer > intro);
-  assert.equal((html.match(/id="journal-heading"/g) ?? []).length, 1);
-  assert.ok(html.includes(`<h1 id="journal-heading">${site.headline}</h1>`));
+  for (const removed of ['class="hero"', 'class="sample-notice"', 'class="site-footer"', "Worth a closer read", "There’s more in the margins.", "Browse the full archive", "Explore the writing", "Considered writing. An open notebook."]) {
+    assert.equal(html.includes(removed), false, `Homepage still contains ${removed}`);
+  }
+  for (const retained of ['class="home-grid"', 'id="latest-heading"', 'aria-label="Main navigation"', 'href="/writing/"', 'href="/about/"', 'href="/feed.xml"']) {
+    assert.ok(html.includes(retained), `Homepage lost ${retained}`);
+  }
+  assert.match(html, /<h1 class="sr-only">The Anagoge: Writing<\/h1>/);
+  assert.match(read("about/index.html"), /class="site-footer"/);
+});
+
+test("header is logo-only and the about page omits the fixed format statistic", () => {
+  for (const path of ["index.html", "writing/index.html", "about/index.html", ...published.map((post) => `writing/${post.slug}/index.html`)]) {
+    const html = read(path);
+    const header = html.match(/<header class="site-header">([\s\S]*?)<\/header>/)?.[1];
+    assert.ok(header?.includes('aria-label="The Anagoge home"'));
+    assert.ok(header.includes('class="site-logo"'));
+    assert.equal(header.includes('class="brand-name"'), false);
+    assert.equal(header.includes('class="brand-tagline"'), false);
+  }
+  const about = read("about/index.html");
+  assert.equal(about.includes("ways of thinking"), false);
+  assert.equal(about.includes("<strong>03</strong>"), false);
+  assert.ok(about.includes("published pieces"));
+});
+
+test("interface arrows are SVGs rather than emoji-capable text glyphs", () => {
+  for (const path of ["index.html", "writing/index.html", "about/index.html", ...published.map((post) => `writing/${post.slug}/index.html`)]) {
+    const html = read(path).replace(/<div class="prose">[\s\S]*?<\/div><div class="article-end">/, "");
+    assert.doesNotMatch(html, /[↗↓←→]/u, `${path}: text arrow remains`);
+    assert.match(html, /<svg[^>]+focusable="false"/);
+  }
+  const article = read(`writing/${published[0].slug}/index.html`);
+  assert.match(article, /class="back-link"[^>]*><svg/);
+  assert.match(article, /BibTeX <svg/);
 });
 
 test("feed and sitemap list every public article and no drafts", () => {

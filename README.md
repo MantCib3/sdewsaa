@@ -66,7 +66,7 @@ Use a JSON-aware editor to avoid unescaped quotes or literal newlines inside str
 
 ## Included
 
-- Responsive writing-first home with the journal introduction at the bottom, searchable archive, individual article pages, author/about page, and custom 404.
+- Responsive writing-first home with a logo-only header and no introductory/footer block, searchable archive, individual article pages, author/about page, and custom 404. Other pages retain footer navigation. Navigation/action arrows use SVG icons for consistent mobile rendering.
 - Format/topic filters, full-text search, oldest/newest sorting, and shareable archive filters.
 - Readable Markdown with paper abstracts, tables, sources, optional PDF links, related writing, reading times, and revision dates.
 - Copyable citations, BibTeX downloads, and print/save-as-PDF styles.
