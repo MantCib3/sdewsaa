@@ -73,13 +73,35 @@ Use a JSON-aware editor to avoid unescaped quotes or literal newlines inside str
 - RSS at `/feed.xml`, sitemap at `/sitemap.xml`, and `/robots.txt`.
 - Page titles/descriptions, canonical URLs, article structured data, favicon, and social title/description metadata.
 - Keyboard focus states, skip link, live search result counts, reduced-motion support, and no externally fetched fonts.
-- Cloudflare security headers and a content policy that does not require inline executable scripts.
+- Netlify/Cloudflare security headers and a content policy that does not require inline executable scripts.
 
 Search and citation buttons use a small native JavaScript module. Core page content is prerendered and readable without JavaScript. RSS subscription means copying the feed URL into a feed reader; no email mailing-list service is configured.
 
 All published content is public. JSON is a build-time content store, not a protected online database.
 
-## Deploy on Cloudflare Pages
+## Deploy on Netlify
+
+Import the `MantCib3/sdewsaa` repository in Netlify and deploy the `main` branch. The root-level [netlify.toml](netlify.toml) configures the build automatically:
+
+| Setting | Value |
+| --- | --- |
+| Base directory | Leave empty (this project is at the repository root) |
+| Package directory | Leave empty |
+| Build command | `npm run build` |
+| Publish directory | `out` |
+| Node.js | `24` (set in the configuration file) |
+
+This is a plain static site, not a Next.js app. No framework adapter, Functions, or SPA rewrite is needed. Netlify serves the generated directory routes, including `/about/`, `/writing/`, and `/writing/<slug>/`, directly. The exported `404.html` handles missing pages with a real 404 response. The exported `_headers` file is supported by both Netlify and Cloudflare.
+
+If an existing Netlify deployment shows **Page not found**, redeploy after pulling the configuration above. Check that the deploy log runs the build successfully and that the deploy's file browser contains `index.html`, `about/index.html`, and `writing/index.html` at the publish root. Remove any old base/package directory overrides or framework plugins in the Netlify UI. Publishing the repository root instead of `out` will not work: generated HTML is intentionally not committed.
+
+For drag-and-drop/manual deployments, run `npm run build` locally and upload the **`out` folder**, not the source project folder. Manual uploads do not execute the build command.
+
+Set `url` in [src/data/site.json](src/data/site.json) to your actual `https://<site>.netlify.app` address or custom domain before launch, then rebuild/redeploy. This affects SEO, feeds, and citations, but does not cause a homepage 404.
+
+Netlify reference: [File-based configuration](https://docs.netlify.com/build/configure-builds/file-based-configuration/).
+
+## Deploy on Cloudflare Pages (alternative)
 
 Push this folder to a GitHub/GitLab repository, then create a **Pages** project and import that repository. Choose no framework preset.
 

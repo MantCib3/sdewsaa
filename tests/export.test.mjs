@@ -9,6 +9,17 @@ const site = JSON.parse(readFileSync("src/data/site.json", "utf8"));
 const origin = site.url.replace(/\/$/, "");
 const published = posts.filter((post) => !post.draft);
 
+test("Netlify builds and publishes the generated static directory", () => {
+  const config = readFileSync("netlify.toml", "utf8");
+  const build = config.match(/^\[build\]\r?\n([\s\S]*?)(?=^\[)/m)?.[1];
+  assert.ok(build, "Missing Netlify build configuration");
+  assert.match(build, /^\s*command = "npm run build"\s*$/m);
+  assert.match(build, /^\s*publish = "out"\s*$/m);
+  assert.match(config, /\[build\.environment\]\s+NODE_VERSION = "24"/);
+  assert.equal(config.includes("[[redirects]]"), false, "Static pages must not use a catch-all SPA rewrite");
+  assert.ok(existsSync(resolve("out", "index.html")));
+});
+
 test("static export has all core routes and a real 404", () => {
   for (const path of ["index.html", "writing/index.html", "about/index.html", "404.html", "feed.xml", "sitemap.xml", "robots.txt", "_headers"]) {
     assert.ok(existsSync(resolve("out", path)), `Missing exported file: ${path}`);
